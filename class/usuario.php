@@ -69,6 +69,29 @@
 
 		}
 
+		public static function getList(){
+
+
+				$sql = new Sql();
+
+				return $sql->select("SELECT * FROM tb_usuarios ORDER BY idusuario;");
+
+		}
+
+		public static function search($login){
+
+			$sql = new Sql();
+
+			return $sql->select("SELECT * FROM tb_usuarios WHERE nome LIKE :SEARCH ORDER BY idusuario", array(
+
+					':SEARCH'=>"%".$login."%"
+
+
+			));
+
+
+		}
+
 		public function __toString(){
 
 			return json_encode(array(
@@ -81,7 +104,36 @@
 
 		}
 
-}
+		public function login($nome, $password){
+
+					$sql = new Sql();
+			$results = $sql->select("SELECT * FROM tb_usuarios WHERE nome = :NOME AND senha = :PASSWORD", array(
+
+				":NOME"=>$nome,
+				":PASSWORD"=>$password
+			));
+			if(count($results)>0){
+
+
+				$row = $results[0];
+
+				$this->setIdusuario($row['idusuario']);
+				$this->setNome($row['nome']);
+				$this->setSenha($row['senha']);
+
+			} else{
+
+					throw new Exception("Login ou senha inválidos");
+					
+
+			}
+
+		}
+
+
+		}
+
+
 
 
 
